@@ -3,6 +3,5 @@ __pycache__/
 .env
 venv/
 .venv/
-data/processed/*.csv
 *.pkl
 .ipynb_checkpoints/
