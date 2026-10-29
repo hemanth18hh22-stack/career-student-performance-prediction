@@ -245,45 +245,32 @@ def inject_base_styles():
             }
         }
 
-        div[data-testid="stVerticalBlockBorderWrapper"]:has(.auth-card-marker) {
-            border: 2px solid transparent !important;
-            background-image: 
-                linear-gradient(#FFFFFF, #FFFFFF), 
-                linear-gradient(135deg, #FF7A45 0%, #EC4899 50%, #8B5CF6 100%) !important;
-            background-origin: padding-box, border-box !important;
-            background-clip: padding-box, border-box !important;
+        div[data-testid="stVerticalBlockBorderWrapper"]:has(.auth-card-marker),
+        div[data-testid="stVerticalBlock"]:has(> div[data-testid="stElementContainer"] .auth-card-marker):not(:has(.onboarding-card-marker)) {
+            border: 3px solid transparent !important;
             border-radius: 24px !important;
-            padding: 2.6rem 2.4rem 2.2rem 2.4rem !important;
+            background:
+                linear-gradient(#FFFFFF, #FFFFFF) padding-box,
+                linear-gradient(135deg, #FF7A45, #EC4899, #8B5CF6) border-box !important;
             box-shadow: 0 20px 60px rgba(236, 72, 153, 0.18) !important;
+            padding: 2.6rem 2.4rem 2.2rem 2.4rem !important;
             animation: authFadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
             transition: box-shadow 0.3s ease !important;
         }
-        div[data-testid="stVerticalBlockBorderWrapper"]:has(.auth-card-marker):hover {
+        div[data-testid="stVerticalBlockBorderWrapper"]:has(.auth-card-marker):hover,
+        div[data-testid="stVerticalBlock"]:has(> div[data-testid="stElementContainer"] .auth-card-marker):not(:has(.onboarding-card-marker)):hover {
             box-shadow: 0 24px 70px rgba(236, 72, 153, 0.24) !important;
         }
 
         /* OTP Specific Centered Card */
-        div[data-testid="stVerticalBlockBorderWrapper"]:has(.otp-card-marker) {
-            border: 2px solid transparent !important;
-            background-image: 
-                linear-gradient(#FFFFFF, #FFFFFF), 
-                linear-gradient(135deg, #FF7A45 0%, #EC4899 50%, #8B5CF6 100%) !important;
-            background-origin: padding-box, border-box !important;
-            background-clip: padding-box, border-box !important;
-            border-radius: 24px !important;
+        div[data-testid="stVerticalBlockBorderWrapper"]:has(.otp-card-marker),
+        div[data-testid="stVerticalBlock"]:has(> div[data-testid="stElementContainer"] .otp-card-marker) {
             padding: 2.5rem 2.2rem 2rem 2.2rem !important;
-            box-shadow: 0 20px 60px rgba(139, 92, 246, 0.18) !important;
-            animation: authFadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
         }
 
         /* Onboarding Specific Centered Card */
-        div[data-testid="stVerticalBlockBorderWrapper"]:has(.onboarding-card-marker) {
-            border: 2px solid transparent !important;
-            background-image: 
-                linear-gradient(#FFFFFF, #FFFFFF), 
-                linear-gradient(135deg, #FF7A45 0%, #EC4899 50%, #8B5CF6 100%) !important;
-            background-origin: padding-box, border-box !important;
-            background-clip: padding-box, border-box !important;
+        div[data-testid="stVerticalBlockBorderWrapper"]:has(.onboarding-card-marker),
+        div[data-testid="stVerticalBlock"]:has(> div[data-testid="stElementContainer"] .onboarding-card-marker) {
             border-radius: 24px !important;
             padding: 2.5rem 2.2rem 2rem 2.2rem !important;
             box-shadow: 0 20px 60px rgba(20, 184, 166, 0.18) !important;
@@ -386,6 +373,7 @@ def inject_base_styles():
         }
 
         /* ================= STREAMLIT TABS STYLING ================= */
+        div[data-testid="stTabs"] div[role="tablist"],
         div[data-baseweb="tab-list"] {
             gap: 0.65rem !important;
             border-bottom: none !important;
@@ -393,46 +381,76 @@ def inject_base_styles():
             padding: 0.25rem 0 !important;
             margin-bottom: 1rem !important;
         }
+        div[data-testid="stTabs"] div[role="tablist"]::after,
         div[data-baseweb="tab-highlight"],
-        div[data-baseweb="tab-border"] {
+        div[data-baseweb="tab-border"],
+        .react-aria-SelectionIndicator {
             display: none !important;
+            content: none !important;
         }
+        div[data-testid="stTabs"] div[role="tab"],
+        div[data-testid="stTab"],
         button[data-baseweb="tab"] {
             font-family: 'Poppins', sans-serif !important;
             font-weight: 600 !important;
             font-size: 0.92rem !important;
             padding: 0.55rem 1.4rem !important;
             border-radius: 999px !important;
-            background-color: #F3E8FF !important;
-            color: #374151 !important;
             border: none !important;
             box-shadow: none !important;
             transition: all 0.2s ease !important;
+            cursor: pointer !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            height: auto !important;
         }
-        button[data-baseweb="tab"] p,
-        button[data-baseweb="tab"] div,
-        button[data-baseweb="tab"] span {
+        div[data-testid="stTabs"] div[role="tab"]:not([aria-selected="true"]):not([data-selected="true"]),
+        div[data-testid="stTab"]:not([aria-selected="true"]):not([data-selected="true"]),
+        button[data-baseweb="tab"]:not([aria-selected="true"]) {
+            background-color: #F3E8FF !important;
+            color: #374151 !important;
+        }
+        div[data-testid="stTabs"] div[role="tab"]:not([aria-selected="true"]):not([data-selected="true"]) p,
+        div[data-testid="stTab"]:not([aria-selected="true"]):not([data-selected="true"]) p,
+        button[data-baseweb="tab"]:not([aria-selected="true"]) p,
+        button[data-baseweb="tab"]:not([aria-selected="true"]) div,
+        button[data-baseweb="tab"]:not([aria-selected="true"]) span {
             color: #374151 !important;
             font-weight: 600 !important;
+            margin: 0 !important;
         }
+        div[data-testid="stTabs"] div[role="tab"]:not([aria-selected="true"]):not([data-selected="true"]):hover,
+        div[data-testid="stTab"]:not([aria-selected="true"]):not([data-selected="true"]):hover,
         button[data-baseweb="tab"]:not([aria-selected="true"]):hover {
             background-color: #EDE9FE !important;
             color: #1F2937 !important;
         }
+        div[data-testid="stTabs"] div[role="tab"]:not([aria-selected="true"]):not([data-selected="true"]):hover p,
+        div[data-testid="stTab"]:not([aria-selected="true"]):not([data-selected="true"]):hover p,
         button[data-baseweb="tab"]:not([aria-selected="true"]):hover p {
             color: #1F2937 !important;
         }
+        div[data-testid="stTabs"] div[role="tab"][aria-selected="true"],
+        div[data-testid="stTabs"] div[role="tab"][data-selected="true"],
+        div[data-testid="stTab"][aria-selected="true"],
+        div[data-testid="stTab"][data-selected="true"],
         button[data-baseweb="tab"][aria-selected="true"] {
             background: linear-gradient(135deg, #FF7A45 0%, #EC4899 50%, #8B5CF6 100%) !important;
             color: #FFFFFF !important;
             box-shadow: 0 4px 14px rgba(236, 72, 153, 0.3) !important;
             border: none !important;
         }
+        div[data-testid="stTabs"] div[role="tab"][aria-selected="true"] p,
+        div[data-testid="stTabs"] div[role="tab"][data-selected="true"] p,
+        div[data-testid="stTab"][aria-selected="true"] p,
+        div[data-testid="stTab"][data-selected="true"] p,
         button[data-baseweb="tab"][aria-selected="true"] p,
         button[data-baseweb="tab"][aria-selected="true"] div,
         button[data-baseweb="tab"][aria-selected="true"] span {
             color: #FFFFFF !important;
             font-weight: 600 !important;
+            margin: 0 !important;
         }
 
         /* ================= PRIMARY BUTTONS (SUNRISE GRADIENT) ================= */
