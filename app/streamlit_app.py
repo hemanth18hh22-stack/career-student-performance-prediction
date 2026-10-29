@@ -13,8 +13,8 @@ from app.views.auth import (
     render_login,
     render_signup,
     render_otp,
-    render_onboarding,
 )
+from app.views.onboarding import render_onboarding
 from app.views.analyzer import render_analyzer
 
 # 1. Set Page Configuration
@@ -29,8 +29,13 @@ st.set_page_config(
 inject_base_styles()
 
 # 3. Initialize Session State Defaults
+query_screen = st.query_params.get("screen")
 if "screen" not in st.session_state:
-    st.session_state["screen"] = "login"
+    if query_screen and query_screen in ["login", "signup", "otp", "onboarding", "analyzer"]:
+        st.session_state["screen"] = query_screen
+    else:
+        st.session_state["screen"] = "login"
+
 if "user" not in st.session_state:
     st.session_state["user"] = {"name": "Alex Sharma", "email": "alex@example.com"}
 if "otp_code" not in st.session_state:
@@ -38,12 +43,9 @@ if "otp_code" not in st.session_state:
 if "otp_target" not in st.session_state:
     st.session_state["otp_target"] = "alex@example.com"
 
-# Allow query param deep-linking (e.g. ?screen=otp)
-query_screen = st.query_params.get("screen")
-if query_screen and query_screen in ["login", "signup", "otp", "onboarding", "analyzer"]:
-    current_screen = query_screen
-else:
-    current_screen = st.session_state.get("screen", "login")
+# Active Screen Routing
+current_screen = st.session_state.get("screen", "login")
+st.query_params["screen"] = current_screen
 
 if current_screen == "login":
     render_login()

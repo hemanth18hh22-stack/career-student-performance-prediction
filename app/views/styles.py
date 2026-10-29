@@ -246,7 +246,9 @@ def inject_base_styles():
         }
 
         div[data-testid="stVerticalBlockBorderWrapper"]:has(.auth-card-marker),
-        div[data-testid="stVerticalBlock"]:has(> div[data-testid="stElementContainer"] .auth-card-marker):not(:has(.onboarding-card-marker)) {
+        div[data-testid="stVerticalBlock"]:has(> div[data-testid="stElementContainer"] .auth-card-marker),
+        div[data-testid="stVerticalBlockBorderWrapper"]:has(.onboarding-card-marker),
+        div[data-testid="stVerticalBlock"]:has(> div[data-testid="stElementContainer"] .onboarding-card-marker) {
             border: 3px solid transparent !important;
             border-radius: 24px !important;
             background:
@@ -258,7 +260,9 @@ def inject_base_styles():
             transition: box-shadow 0.3s ease !important;
         }
         div[data-testid="stVerticalBlockBorderWrapper"]:has(.auth-card-marker):hover,
-        div[data-testid="stVerticalBlock"]:has(> div[data-testid="stElementContainer"] .auth-card-marker):not(:has(.onboarding-card-marker)):hover {
+        div[data-testid="stVerticalBlock"]:has(> div[data-testid="stElementContainer"] .auth-card-marker):hover,
+        div[data-testid="stVerticalBlockBorderWrapper"]:has(.onboarding-card-marker):hover,
+        div[data-testid="stVerticalBlock"]:has(> div[data-testid="stElementContainer"] .onboarding-card-marker):hover {
             box-shadow: 0 24px 70px rgba(236, 72, 153, 0.24) !important;
         }
 
@@ -271,10 +275,7 @@ def inject_base_styles():
         /* Onboarding Specific Centered Card */
         div[data-testid="stVerticalBlockBorderWrapper"]:has(.onboarding-card-marker),
         div[data-testid="stVerticalBlock"]:has(> div[data-testid="stElementContainer"] .onboarding-card-marker) {
-            border-radius: 24px !important;
-            padding: 2.5rem 2.2rem 2rem 2.2rem !important;
-            box-shadow: 0 20px 60px rgba(20, 184, 166, 0.18) !important;
-            animation: authFadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+            padding: 2.4rem 2.2rem 2rem 2.2rem !important;
         }
 
         /* Card Inner Header */
@@ -724,6 +725,139 @@ def inject_base_styles():
         div[data-baseweb="input"]:has(input:disabled) {
             background-color: #FAF5FF !important;
             border-color: #E9D5FF !important;
+        }
+
+        /* ================= SELECTBOX STYLING ================= */
+        div[data-baseweb="select"] > div {
+            background-color: #FFFFFF !important;
+            border: 1.5px solid #E9D5FF !important;
+            border-radius: 12px !important;
+            box-shadow: none !important;
+            transition: all 0.2s ease !important;
+        }
+        div[data-baseweb="select"]:focus-within > div {
+            border-color: #8B5CF6 !important;
+            box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.15) !important;
+        }
+
+        /* ================= PROGRESS BAR & SLIDER STYLING ================= */
+        div[data-testid="stProgressBar"] > div {
+            background-color: #F3E8FF !important;
+            border-radius: 999px !important;
+            height: 10px !important;
+        }
+        div[data-testid="stProgressBar"] > div > div {
+            background: linear-gradient(90deg, #FF7A45 0%, #EC4899 50%, #8B5CF6 100%) !important;
+            border-radius: 999px !important;
+        }
+        div[data-testid="stSlider"] div[role="slider"] {
+            background-color: #EC4899 !important;
+            border: 2px solid #FFFFFF !important;
+            box-shadow: 0 2px 8px rgba(236, 72, 153, 0.4) !important;
+        }
+
+        /* ================= ONBOARDING BUTTONS ================= */
+        div.st-key-onb_back_btn button,
+        div.st-key-onb_step2_back_btn button,
+        div.st-key-onb_step3_back_btn button {
+            background-color: #F3E8FF !important;
+            color: #6B21A8 !important;
+            border: 1.5px solid #E9D5FF !important;
+            border-radius: 12px !important;
+            font-weight: 600 !important;
+            font-size: 0.95rem !important;
+            padding: 0.72rem 1.4rem !important;
+            transition: all 0.2s ease !important;
+            margin-top: 0.8rem !important;
+        }
+        div.st-key-onb_back_btn button p,
+        div.st-key-onb_step2_back_btn button p,
+        div.st-key-onb_step3_back_btn button p {
+            color: #6B21A8 !important;
+            font-weight: 600 !important;
+            margin: 0 !important;
+        }
+        div.st-key-onb_back_btn button:hover,
+        div.st-key-onb_step2_back_btn button:hover,
+        div.st-key-onb_step3_back_btn button:hover {
+            background-color: #EDE9FE !important;
+            border-color: #C084FC !important;
+            color: #581C87 !important;
+            transform: translateY(-1px) !important;
+        }
+        div.st-key-onb_next_btn button,
+        div.st-key-onb_step2_next_btn button,
+        div.st-key-onb_finish_btn button {
+            background: linear-gradient(135deg, #FF7043 0%, #EC4899 50%, #8B5CF6 100%) !important;
+            color: #FFFFFF !important;
+            border: none !important;
+            border-radius: 12px !important;
+            padding: 0.72rem 1.4rem !important;
+            font-weight: 600 !important;
+            font-size: 0.98rem !important;
+            box-shadow: 0 4px 15px rgba(236, 72, 153, 0.3) !important;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+            margin-top: 0.8rem !important;
+        }
+        div.st-key-onb_next_btn button p,
+        div.st-key-onb_step2_next_btn button p,
+        div.st-key-onb_finish_btn button p {
+            color: #FFFFFF !important;
+            font-weight: 600 !important;
+            margin: 0 !important;
+        }
+        div.st-key-onb_next_btn button:hover,
+        div.st-key-onb_step2_next_btn button:hover,
+        div.st-key-onb_finish_btn button:hover {
+            transform: translateY(-2px) !important;
+            box-shadow: 0 8px 24px rgba(236, 72, 153, 0.45) !important;
+            color: #FFFFFF !important;
+        }
+
+        /* ================= DOMAIN CARDS (st.radio styled as cards) ================= */
+        div:has(> div[data-testid="stElementContainer"] .domain-cards-marker) div[role="radiogroup"],
+        div[data-testid="stVerticalBlock"]:has(.domain-cards-marker) div[role="radiogroup"] {
+            display: grid !important;
+            grid-template-columns: repeat(2, 1fr) !important;
+            gap: 0.75rem !important;
+        }
+        div:has(> div[data-testid="stElementContainer"] .domain-cards-marker) div[role="radiogroup"] label,
+        div[data-testid="stVerticalBlock"]:has(.domain-cards-marker) div[role="radiogroup"] label {
+            background: #FFFFFF !important;
+            border: 1.5px solid #E9D5FF !important;
+            border-radius: 14px !important;
+            padding: 0.8rem 1rem !important;
+            margin: 0 !important;
+            transition: all 0.2s ease !important;
+            cursor: pointer !important;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02) !important;
+        }
+        div:has(> div[data-testid="stElementContainer"] .domain-cards-marker) div[role="radiogroup"] label:hover,
+        div[data-testid="stVerticalBlock"]:has(.domain-cards-marker) div[role="radiogroup"] label:hover {
+            background: #FFF7F5 !important;
+            border-color: #EC4899 !important;
+            transform: translateY(-1px) !important;
+            box-shadow: 0 4px 12px rgba(236, 72, 153, 0.12) !important;
+        }
+        div:has(> div[data-testid="stElementContainer"] .domain-cards-marker) div[role="radiogroup"] label:has(input:checked),
+        div[data-testid="stVerticalBlock"]:has(.domain-cards-marker) div[role="radiogroup"] label:has(input:checked) {
+            background: linear-gradient(135deg, #FFF1EE 0%, #FDF2F8 100%) !important;
+            border-color: #EC4899 !important;
+            border-width: 2px !important;
+            box-shadow: 0 4px 15px rgba(236, 72, 153, 0.18) !important;
+        }
+
+        /* ================= MULTISELECT TAGS ================= */
+        div[data-baseweb="tag"] {
+            background: linear-gradient(135deg, #FFE4E6 0%, #F3E8FF 100%) !important;
+            border: 1px solid #F472B6 !important;
+            border-radius: 8px !important;
+            color: #831843 !important;
+            font-weight: 600 !important;
+        }
+        div[data-baseweb="tag"] span {
+            color: #831843 !important;
+            font-weight: 600 !important;
         }
         </style>
         """

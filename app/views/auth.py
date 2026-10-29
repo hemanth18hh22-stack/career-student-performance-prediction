@@ -406,48 +406,6 @@ def render_otp():
                     st.rerun()
 
 
-def render_onboarding():
-    """Renders the welcoming placeholder onboarding screen."""
-    col_l, col_center, col_r = st.columns([1, 1.8, 1])
+# Re-export render_onboarding from app.views.onboarding
+from app.views.onboarding import render_onboarding
 
-    user = st.session_state.get("user", {})
-    user_name = user.get("name") or "Student"
-    user_contact = user.get("email") or user.get("phone") or "Verified Student"
-
-    with col_center:
-        with st.container(border=True):
-            inject('<span class="auth-card-marker onboarding-card-marker"></span>')
-
-            inject(
-                f"""
-                <div style="text-align: center; margin-bottom: 1.5rem;">
-                    <div style="font-size: 3.2rem; margin-bottom: 0.5rem;">🌱</div>
-                    <h2 style="font-size: 2.1rem; font-weight: 700; color: #1F2937; margin-bottom: 0.4rem;">Welcome aboard, {user_name}! ✨</h2>
-                    <p style="color: #6B7280; font-size: 1rem; margin: 0;">Your account has been verified and your profile is activated.</p>
-                </div>
-
-                <div style="background: linear-gradient(135deg, #F0FDFA 0%, #EDE9FE 100%); border: 1.5px solid #CCFBF1; border-radius: 18px; padding: 1.8rem; text-align: center; margin-bottom: 1.8rem; box-shadow: 0 4px 15px rgba(20, 184, 166, 0.06);">
-                    <div style="display: inline-block; background: #0D9488; color: #FFFFFF; font-size: 0.76rem; font-weight: 700; padding: 0.25rem 0.75rem; border-radius: 12px; margin-bottom: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;">COMING NEXT</div>
-                    <h3 style="color: #134E4A; font-size: 1.3rem; font-weight: 700; margin-bottom: 0.6rem;">Interactive Student Onboarding</h3>
-                    <p style="color: #374151; font-size: 0.94rem; line-height: 1.6; margin: 0;">We are designing a guided onboarding flow to personalize your semester targets, map university course syllabi, and calibrate career milestones.</p>
-                </div>
-
-                <div style="display: flex; justify-content: center; gap: 0.8rem; flex-wrap: wrap; margin-bottom: 1.8rem;">
-                    <span style="background: #FFF1EE; color: #C2410C; padding: 0.45rem 1rem; border-radius: 20px; font-weight: 600; font-size: 0.88rem; border: 1px solid #FED7AA;">👤 {user_name}</span>
-                    <span style="background: #F3E8FF; color: #7E22CE; padding: 0.45rem 1rem; border-radius: 20px; font-weight: 600; font-size: 0.88rem; border: 1px solid #DDD6FE;">📍 {user_contact}</span>
-                    <span style="background: #ECFDF5; color: #047857; padding: 0.45rem 1rem; border-radius: 20px; font-weight: 600; font-size: 0.88rem; border: 1px solid #A7F3D0;">✓ Account Active</span>
-                </div>
-                """
-            )
-
-            # Continue button to Analyzer
-            if st.button("Continue to Performance Analyzer ➡️", key="onboard_continue_btn", type="primary", use_container_width=True):
-                st.session_state["screen"] = "analyzer"
-                st.rerun()
-
-            st.write("")
-            with st.container():
-                inject('<span class="auth-link-marker"></span>')
-                if st.button("Return to Login", key="onboard_back_login", use_container_width=True):
-                    st.session_state["screen"] = "login"
-                    st.rerun()

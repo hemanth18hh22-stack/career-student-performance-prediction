@@ -4,7 +4,7 @@ import joblib
 import numpy as np
 import pandas as pd
 import streamlit as st
-from app.views.styles import inject_analyzer_styles
+from app.views.styles import inject, inject_analyzer_styles
 
 
 @st.cache_resource
@@ -28,21 +28,69 @@ def render_analyzer():
     """Renders the existing Student Performance Analyzer prediction UI and logic."""
     inject_analyzer_styles()
 
+    # Pre-fill defaults from profile if available
+    profile = st.session_state.get("profile", {})
+    skills_profile = profile.get("skills", {})
+
+    # 1. Study hours: weekly_hours / 7 clamped to 1.0 - 10.0
+    raw_weekly = profile.get("weekly_hours")
+    if raw_weekly is not None:
+        try:
+            calc_daily = float(raw_weekly) / 7.0
+            default_study_hours = float(round(max(1.0, min(10.0, calc_daily)), 1))
+        except (ValueError, TypeError):
+            default_study_hours = 5.0
+    else:
+        default_study_hours = 5.0
+
+    # 2. Skill levels: from skills named exactly "Python", "SQL", "Machine Learning" if selected (else Beginner)
+    skill_level_options = ["Beginner", "Intermediate", "Advanced"]
+
+    py_skill = skills_profile.get("Python", "Beginner")
+    default_py_idx = (
+        skill_level_options.index(py_skill)
+        if py_skill in skill_level_options
+        else 0
+    )
+
+    sql_skill = skills_profile.get("SQL", "Beginner")
+    default_sql_idx = (
+        skill_level_options.index(sql_skill)
+        if sql_skill in skill_level_options
+        else 0
+    )
+
+    ml_skill = skills_profile.get("Machine Learning", "Beginner")
+    default_ml_idx = (
+        skill_level_options.index(ml_skill)
+        if ml_skill in skill_level_options
+        else 0
+    )
+
+    # 3. Projects completed: from projects
+    raw_projects = profile.get("projects")
+    if raw_projects is not None:
+        try:
+            default_projects = int(max(0, min(8, int(raw_projects))))
+        except (ValueError, TypeError):
+            default_projects = 2
+    else:
+        default_projects = 2
+
     # User status bar if logged in
     user = st.session_state.get("user", {})
     user_name = user.get("name") or user.get("email") or "Student"
     
     col_nav_left, col_nav_right = st.columns([3, 1])
     with col_nav_left:
-        st.markdown(
+        inject(
             f"""
             <div style="display: flex; align-items: center; gap: 0.75rem; margin-top: 0.2rem;">
                 <span style="background: #F3F4F6; color: #374151; font-weight: 600; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.88rem;">
                     👤 Active Session: <strong>{user_name}</strong>
                 </span>
             </div>
-            """,
-            unsafe_allow_html=True,
+            """
         )
     with col_nav_right:
         if st.button("🚪 Sign Out", key="analyzer_logout_btn", use_container_width=True):
@@ -52,15 +100,30 @@ def render_analyzer():
             st.session_state["otp_target"] = None
             st.rerun()
 
+    # Welcome banner if just finished onboarding
+    if st.session_state.get("profile_just_completed"):
+        st.session_state["profile_just_completed"] = False
+        inject(
+            f"""
+            <div style="background: linear-gradient(135deg, #ECFDF5 0%, #EDE9FE 100%); border: 1.5px solid #A7F3D0; border-radius: 16px; padding: 1.2rem 1.6rem; margin-bottom: 1.5rem; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.1);">
+                <div style="font-weight: 700; color: #065F46; font-size: 1.15rem; margin-bottom: 0.25rem;">
+                    🎉 Welcome to your dashboard, {user_name}!
+                </div>
+                <div style="color: #047857; font-size: 0.92rem;">
+                    Your academic profile and skill proficiencies from onboarding have been loaded below. Every field stays editable.
+                </div>
+            </div>
+            """
+        )
+
     # Header Banner & Subtitle
-    st.markdown(
+    inject(
         """
         <div class="header-banner">
             <h1>🎓 Student Performance Analyzer</h1>
             <p>Enter your details below and discover insights about your academic journey! 🚀</p>
         </div>
-        """,
-        unsafe_allow_html=True,
+        """
     )
 
     try:
@@ -73,12 +136,9 @@ def render_analyzer():
     with st.form(key="student_form"):
         # Card 1: Academic Info
         with st.container(border=True):
-            st.markdown(
-                '<span class="academic-marker"></span>', unsafe_allow_html=True
-            )
-            st.markdown(
-                '<div class="card-title"><span class="icon-badge icon-blue">📖</span>Academic Info</div>',
-                unsafe_allow_html=True,
+            inject('<span class="academic-marker"></span>')
+            inject(
+                '<div class="card-title"><span class="icon-badge icon-blue">📖</span>Academic Info</div>'
             )
             col1, col2, col3 = st.columns(3)
             with col1:
@@ -86,7 +146,7 @@ def render_analyzer():
                     "⏰ Study Hours (per day)",
                     min_value=1.0,
                     max_value=10.0,
-                    value=5.0,
+                    value=default_study_hours,
                     step=0.1,
                 )
                 attendance = st.number_input(
@@ -118,36 +178,35 @@ def render_analyzer():
 
         # Card 2: Skills
         with st.container(border=True):
-            st.markdown(
-                '<span class="skills-marker"></span>', unsafe_allow_html=True
-            )
-            st.markdown(
-                '<div class="card-title"><span class="icon-badge icon-green">💻</span>Skills</div>',
-                unsafe_allow_html=True,
+            inject('<span class="skills-marker"></span>')
+            inject(
+                '<div class="card-title"><span class="icon-badge icon-green">💻</span>Skills</div>'
             )
             col_s1, col_s2, col_s3 = st.columns(3)
             with col_s1:
                 python_level = st.selectbox(
                     "🐍 Python Level",
-                    options=["Beginner", "Intermediate", "Advanced"],
+                    options=skill_level_options,
+                    index=default_py_idx,
                 )
             with col_s2:
                 sql_level = st.selectbox(
-                    "🗄️ SQL Level", options=["Beginner", "Intermediate", "Advanced"]
+                    "🗄️ SQL Level",
+                    options=skill_level_options,
+                    index=default_sql_idx,
                 )
             with col_s3:
                 ml_level = st.selectbox(
-                    "🤖 ML Level", options=["Beginner", "Intermediate", "Advanced"]
+                    "🤖 ML Level",
+                    options=skill_level_options,
+                    index=default_ml_idx,
                 )
 
         # Card 3: Learning Habits
         with st.container(border=True):
-            st.markdown(
-                '<span class="habits-marker"></span>', unsafe_allow_html=True
-            )
-            st.markdown(
-                '<div class="card-title"><span class="icon-badge icon-orange">🎯</span>Learning Habits</div>',
-                unsafe_allow_html=True,
+            inject('<span class="habits-marker"></span>')
+            inject(
+                '<div class="card-title"><span class="icon-badge icon-orange">🎯</span>Learning Habits</div>'
             )
             col_h1, col_h2, col_h3 = st.columns(3)
             with col_h1:
@@ -155,7 +214,7 @@ def render_analyzer():
                     "🚀 Projects Completed",
                     min_value=0,
                     max_value=8,
-                    value=2,
+                    value=default_projects,
                     step=1,
                 )
             with col_h2:
@@ -212,34 +271,31 @@ def render_analyzer():
         # Display large animated-style result card
         if predicted_label == "Good":
             st.balloons()
-            st.markdown(
+            inject(
                 """
                 <div class="result-card result-card-good">
                     <div class="result-title">🎉 Predicted Performance: Good</div>
                     <div class="result-subtitle">Outstanding work! Keep up the excellent effort and consistency!</div>
                 </div>
-                """,
-                unsafe_allow_html=True,
+                """
             )
         elif predicted_label == "Average":
-            st.markdown(
+            inject(
                 """
                 <div class="result-card result-card-average">
                     <div class="result-title">📊 Predicted Performance: Average</div>
                     <div class="result-subtitle">Solid foundation! A bit more practice can help you reach the top tier.</div>
                 </div>
-                """,
-                unsafe_allow_html=True,
+                """
             )
         else:
-            st.markdown(
+            inject(
                 """
                 <div class="result-card result-card-poor">
                     <div class="result-title">💪 Predicted Performance: Poor</div>
                     <div class="result-subtitle">Let's build a plan to improve! Focus on consistency and clearing backlogs.</div>
                 </div>
-                """,
-                unsafe_allow_html=True,
+                """
             )
 
         # Confidence Progress Bar
