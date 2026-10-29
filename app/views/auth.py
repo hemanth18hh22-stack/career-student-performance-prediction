@@ -42,22 +42,22 @@ def render_login():
                         Unlock personalized academic insights, track your core competencies, 
                         and shape your educational journey with confidence.
                     </p>
-                    <div class="auth-feature-cards">
-                        <div class="auth-feature-item">
+                    <div class="auth-feature-cards" style="width: 100%; margin: 0; padding: 0; box-sizing: border-box;">
+                        <div class="auth-feature-item" style="margin: 0; padding: 0.95rem 1.2rem; width: 100%; box-sizing: border-box;">
                             <div class="auth-feature-icon">🎯</div>
                             <div class="auth-feature-text">
                                 <h4>Smart Performance Predictions</h4>
                                 <p>Machine learning powered forecasts based on real student metrics.</p>
                             </div>
                         </div>
-                        <div class="auth-feature-item">
+                        <div class="auth-feature-item" style="margin: 0; padding: 0.95rem 1.2rem; width: 100%; box-sizing: border-box;">
                             <div class="auth-feature-icon">💡</div>
                             <div class="auth-feature-text">
                                 <h4>Personalized Growth Insights</h4>
                                 <p>Pinpoint exact strengths and improvement areas before exam day.</p>
                             </div>
                         </div>
-                        <div class="auth-feature-item">
+                        <div class="auth-feature-item" style="margin: 0; padding: 0.95rem 1.2rem; width: 100%; box-sizing: border-box;">
                             <div class="auth-feature-icon">🚀</div>
                             <div class="auth-feature-text">
                                 <h4>Clear Career Pathways</h4>

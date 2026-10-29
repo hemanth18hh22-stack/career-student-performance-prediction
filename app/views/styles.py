@@ -23,6 +23,10 @@ def inject_base_styles():
             font-family: 'Poppins', sans-serif !important;
         }
 
+        /* ================= HIDE STREAMLIT HEADING ANCHORS ================= */
+        [data-testid="stHeaderActionElements"] { display: none !important; }
+        a.anchor-link, h1 a, h2 a, h3 a { display: none !important; }
+
         /* Top header bar for active screen */
         .platform-nav-bar {
             display: flex;
@@ -90,6 +94,10 @@ def inject_base_styles():
             display: flex;
             flex-direction: column;
             gap: 1rem;
+            width: 100% !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            box-sizing: border-box !important;
         }
         .auth-feature-item {
             display: flex;
@@ -98,13 +106,16 @@ def inject_base_styles():
             background: rgba(255, 255, 255, 0.16);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
-            padding: 0.95rem 1.2rem;
+            margin: 0 !important;
+            padding: 0.95rem 1.2rem !important;
             border-radius: 16px;
             border: 1px solid rgba(255, 255, 255, 0.28);
+            box-sizing: border-box !important;
+            width: 100% !important;
             transition: transform 0.2s ease, background 0.2s ease;
         }
         .auth-feature-item:hover {
-            transform: translateX(4px);
+            transform: translateY(-2px);
             background: rgba(255, 255, 255, 0.24);
         }
         .auth-feature-icon {
