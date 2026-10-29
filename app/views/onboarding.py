@@ -312,6 +312,11 @@ def _render_step_1():
 
     with col_back:
         if st.button("⬅️ Return to Login", key="onb_back_btn", use_container_width=True):
+            if hasattr(st, "user") and st.user.get("is_logged_in", False):
+                try:
+                    st.logout()
+                except Exception:
+                    pass
             st.session_state["screen"] = "login"
             st.rerun()
 

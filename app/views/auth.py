@@ -28,6 +28,18 @@ def generate_otp() -> str:
     return f"{random.randint(100000, 999999)}"
 
 
+def handle_google_login():
+    """Triggers Google sign-in using Streamlit's native OIDC authentication."""
+    try:
+        auth_sec = st.secrets.get("auth", {})
+        if "google" in auth_sec:
+            st.login("google")
+        else:
+            st.login()
+    except Exception as e:
+        st.error(f"Google sign-in could not be initiated: {e}")
+
+
 def render_login():
     """Renders the warm, welcoming two-column Sunrise login screen."""
     col_hero, col_card = st.columns([1.1, 1], gap="large")
@@ -84,7 +96,7 @@ def render_login():
             # Continue with Google button
             inject('<span class="google-btn-marker"></span>')
             if st.button("Continue with Google", key="login_google_btn", use_container_width=True):
-                st.info("Google sign-in will be connected in the next stage")
+                handle_google_login()
 
             # Divider with "or continue with"
             inject(
@@ -227,7 +239,7 @@ def render_signup():
             # Continue with Google button
             inject('<span class="google-btn-marker"></span>')
             if st.button("Continue with Google", key="signup_google_btn", use_container_width=True):
-                st.info("Google sign-in will be connected in the next stage")
+                handle_google_login()
 
             # Divider with "or"
             inject(

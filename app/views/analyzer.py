@@ -80,24 +80,33 @@ def render_analyzer():
     # User status bar if logged in
     user = st.session_state.get("user", {})
     user_name = user.get("name") or user.get("email") or "Student"
+    user_picture = user.get("picture", "")
+    avatar_html = (
+        f'<img src="{user_picture}" style="width: 22px; height: 22px; border-radius: 50%; vertical-align: middle; margin-right: 6px;" />'
+        if user_picture
+        else '👤 '
+    )
     
     col_nav_left, col_nav_right = st.columns([3, 1])
     with col_nav_left:
         inject(
             f"""
             <div style="display: flex; align-items: center; gap: 0.75rem; margin-top: 0.2rem;">
-                <span style="background: #F3F4F6; color: #374151; font-weight: 600; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.88rem;">
-                    👤 Active Session: <strong>{user_name}</strong>
+                <span style="background: #F3F4F6; color: #374151; font-weight: 600; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.88rem; display: inline-flex; align-items: center;">
+                    {avatar_html}Active Session: <strong style="margin-left: 4px;">{user_name}</strong>
                 </span>
             </div>
             """
         )
     with col_nav_right:
         if st.button("🚪 Sign Out", key="analyzer_logout_btn", use_container_width=True):
-            st.session_state["user"] = {}
+            st.session_state.clear()
             st.session_state["screen"] = "login"
-            st.session_state["otp_code"] = None
-            st.session_state["otp_target"] = None
+            try:
+                if hasattr(st, "user") and st.user.get("is_logged_in", False):
+                    st.logout()
+            except Exception:
+                pass
             st.rerun()
 
     # Welcome banner if just finished onboarding
