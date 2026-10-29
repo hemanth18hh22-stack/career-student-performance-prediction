@@ -5,3 +5,13 @@ venv/
 .venv/
 *.pkl
 .ipynb_checkpoints/
+.agent/
+.agents/
+.gsd/
+.gemini/
+adapters/
+scripts/
+scratch/
+GSD-STYLE.md
+VERSION
+model_capabilities.yaml
