@@ -2,6 +2,7 @@ import re
 import time
 import random
 import streamlit as st
+from app.views.styles import inject
 
 EMAIL_REGEX = r"^[\w\.-]+@[\w\.-]+\.[a-zA-Z]{2,}$"
 
@@ -32,16 +33,13 @@ def render_login():
     col_hero, col_card = st.columns([1.1, 1], gap="large")
 
     with col_hero:
-        st.markdown(
+        inject(
             """
             <div class="auth-hero-panel">
                 <div>
-                    <div style="font-size: 2.3rem; margin-bottom: 0.6rem;">🌅</div>
+                    <div class="auth-hero-floating-logo">🌅</div>
                     <h1 class="auth-hero-title">Your future starts with one step ✨</h1>
-                    <p class="auth-hero-desc">
-                        Unlock personalized academic insights, track your core competencies, 
-                        and shape your educational journey with confidence.
-                    </p>
+                    <p class="auth-hero-desc">Unlock personalized academic insights, track your core competencies, and shape your educational journey with confidence.</p>
                     <div class="auth-feature-cards" style="width: 100%; margin: 0; padding: 0; box-sizing: border-box;">
                         <div class="auth-feature-item" style="margin: 0; padding: 0.95rem 1.2rem; width: 100%; box-sizing: border-box;">
                             <div class="auth-feature-icon">🎯</div>
@@ -66,40 +64,35 @@ def render_login():
                         </div>
                     </div>
                 </div>
-                <div style="font-size: 0.86rem; color: rgba(255, 255, 255, 0.92); margin-top: 2rem;">
-                    🌱 Empowering students to realize their highest academic potential.
-                </div>
+                <div style="font-size: 0.86rem; color: rgba(255, 255, 255, 0.92); margin-top: 2rem;">🌱 Empowering students to realize their highest academic potential.</div>
             </div>
-            """,
-            unsafe_allow_html=True,
+            """
         )
 
     with col_card:
         with st.container(border=True):
-            st.markdown('<span class="auth-card-marker"></span>', unsafe_allow_html=True)
-            st.markdown(
+            inject('<span class="auth-card-marker"></span>')
+            inject(
                 """
                 <div class="auth-card-header">
                     <h2>Welcome back 🌱</h2>
                     <p>Sign in to access your student dashboard & predictions</p>
                 </div>
-                """,
-                unsafe_allow_html=True,
+                """
             )
 
             # Continue with Google button
-            st.markdown('<span class="google-btn-marker"></span>', unsafe_allow_html=True)
+            inject('<span class="google-btn-marker"></span>')
             if st.button("Continue with Google", key="login_google_btn", use_container_width=True):
                 st.info("Google sign-in will be connected in the next stage")
 
-            # Divider with "or"
-            st.markdown(
+            # Divider with "or continue with"
+            inject(
                 """
                 <div class="auth-divider">
-                    <span>or</span>
+                    <span>or continue with</span>
                 </div>
-                """,
-                unsafe_allow_html=True,
+                """
             )
 
             # Tabs: Email vs Phone
@@ -163,10 +156,19 @@ def render_login():
                         st.rerun()
 
             # Link-style navigation to Signup
-            st.markdown('<span class="auth-link-marker"></span>', unsafe_allow_html=True)
+            inject('<span class="auth-link-marker"></span>')
             if st.button("New here? Create an account", key="go_to_signup", use_container_width=True):
                 st.session_state["screen"] = "signup"
                 st.rerun()
+
+        # Small privacy note under the card
+        inject(
+            """
+            <div style="text-align: center; color: #9CA3AF; font-size: 0.85rem; margin-top: 1rem;">
+                🔒 Your data stays private
+            </div>
+            """
+        )
 
 
 def render_signup():
@@ -174,16 +176,13 @@ def render_signup():
     col_hero, col_card = st.columns([1.1, 1], gap="large")
 
     with col_hero:
-        st.markdown(
+        inject(
             """
             <div class="auth-hero-panel">
                 <div>
-                    <div style="font-size: 2.3rem; margin-bottom: 0.6rem;">🚀</div>
+                    <div class="auth-hero-floating-logo">🚀</div>
                     <h1 class="auth-hero-title">Begin your journey today 🌟</h1>
-                    <p class="auth-hero-desc">
-                        Join thousands of students and educators transforming academic potential 
-                        into measurable future achievements.
-                    </p>
+                    <p class="auth-hero-desc">Join thousands of students and educators transforming academic potential into measurable future achievements.</p>
                     <div class="auth-feature-cards">
                         <div class="auth-feature-item">
                             <div class="auth-feature-icon">🎓</div>
@@ -208,40 +207,35 @@ def render_signup():
                         </div>
                     </div>
                 </div>
-                <div style="font-size: 0.86rem; color: rgba(255, 255, 255, 0.92); margin-top: 2rem;">
-                    ✨ Zero setup friction. Start exploring insights in seconds.
-                </div>
+                <div style="font-size: 0.86rem; color: rgba(255, 255, 255, 0.92); margin-top: 2rem;">✨ Zero setup friction. Start exploring insights in seconds.</div>
             </div>
-            """,
-            unsafe_allow_html=True,
+            """
         )
 
     with col_card:
         with st.container(border=True):
-            st.markdown('<span class="auth-card-marker"></span>', unsafe_allow_html=True)
-            st.markdown(
+            inject('<span class="auth-card-marker"></span>')
+            inject(
                 """
                 <div class="auth-card-header">
                     <h2>Join us today ✨</h2>
                     <p>Create your free student account in seconds</p>
                 </div>
-                """,
-                unsafe_allow_html=True,
+                """
             )
 
             # Continue with Google button
-            st.markdown('<span class="google-btn-marker"></span>', unsafe_allow_html=True)
+            inject('<span class="google-btn-marker"></span>')
             if st.button("Continue with Google", key="signup_google_btn", use_container_width=True):
                 st.info("Google sign-in will be connected in the next stage")
 
             # Divider with "or"
-            st.markdown(
+            inject(
                 """
                 <div class="auth-divider">
-                    <span>or</span>
+                    <span>or continue with</span>
                 </div>
-                """,
-                unsafe_allow_html=True,
+                """
             )
 
             # Name input field
@@ -323,10 +317,19 @@ def render_signup():
                         st.rerun()
 
             # Link-style navigation back to Login
-            st.markdown('<span class="auth-link-marker"></span>', unsafe_allow_html=True)
+            inject('<span class="auth-link-marker"></span>')
             if st.button("Already have an account? Log in", key="go_to_login", use_container_width=True):
                 st.session_state["screen"] = "login"
                 st.rerun()
+
+        # Small privacy note under the card
+        inject(
+            """
+            <div style="text-align: center; color: #9CA3AF; font-size: 0.85rem; margin-top: 1rem;">
+                🔒 Your data stays private
+            </div>
+            """
+        )
 
 
 def render_otp():
@@ -335,7 +338,7 @@ def render_otp():
 
     with col_center:
         with st.container(border=True):
-            st.markdown('<span class="auth-card-marker otp-card-marker"></span>', unsafe_allow_html=True)
+            inject('<span class="auth-card-marker otp-card-marker"></span>')
 
             target_display = st.session_state.get("otp_target") or "your registered device"
             current_otp = st.session_state.get("otp_code")
@@ -343,41 +346,31 @@ def render_otp():
                 current_otp = generate_otp()
                 st.session_state["otp_code"] = current_otp
 
-            st.markdown(
+            inject(
                 f"""
                 <div style="text-align: center; margin-bottom: 1.25rem;">
                     <div style="font-size: 2.8rem; margin-bottom: 0.5rem;">📩</div>
-                    <h2 style="font-size: 1.85rem; font-weight: 700; color: #1F2937; margin-bottom: 0.4rem;">
-                        Check your inbox/phone 📩
-                    </h2>
-                    <p style="color: #6B7280; font-size: 0.94rem; margin: 0; line-height: 1.5;">
-                        We have dispatched a 6-digit verification code to:<br>
-                        <strong style="color: #1F2937; font-size: 1.02rem;">{target_display}</strong>
-                    </p>
+                    <h2 style="font-size: 1.85rem; font-weight: 700; color: #1F2937; margin-bottom: 0.4rem;">Check your inbox/phone 📩</h2>
+                    <p style="color: #6B7280; font-size: 0.94rem; margin: 0; line-height: 1.5;">We have dispatched a 6-digit verification code to:<br><strong style="color: #1F2937; font-size: 1.02rem;">{target_display}</strong></p>
                 </div>
-                """,
-                unsafe_allow_html=True,
+                """
             )
 
             # Clearly labeled Demo Mode box
-            st.markdown(
+            inject(
                 f"""
                 <div class="demo-otp-box">
                     <div class="demo-otp-badge">DEMO MODE</div>
                     <div class="demo-otp-code">{current_otp}</div>
-                    <div class="demo-otp-note">
-                        Demo mode: your OTP is <strong>{current_otp}</strong><br>
-                        (real SMS/email delivery comes in the next stage)
-                    </div>
+                    <div class="demo-otp-note">Demo mode: your OTP is <strong>{current_otp}</strong><br>(real SMS/email delivery comes in the next stage)</div>
                 </div>
-                """,
-                unsafe_allow_html=True,
+                """
             )
 
             # Large centered text input
-            st.markdown('<p style="text-align: center; font-weight: 600; color: #374151; margin-bottom: 0.4rem;">Enter 6-digit Code</p>', unsafe_allow_html=True)
+            inject('<p style="text-align: center; font-weight: 600; color: #374151; margin-bottom: 0.4rem;">Enter 6-digit Code</p>')
             with st.container():
-                st.markdown('<span class="otp-input-marker"></span>', unsafe_allow_html=True)
+                inject('<span class="otp-input-marker"></span>')
                 user_otp = st.text_input(
                     "6-Digit Code",
                     max_chars=6,
@@ -423,46 +416,28 @@ def render_onboarding():
 
     with col_center:
         with st.container(border=True):
-            st.markdown('<span class="auth-card-marker onboarding-card-marker"></span>', unsafe_allow_html=True)
+            inject('<span class="auth-card-marker onboarding-card-marker"></span>')
 
-            st.markdown(
+            inject(
                 f"""
                 <div style="text-align: center; margin-bottom: 1.5rem;">
                     <div style="font-size: 3.2rem; margin-bottom: 0.5rem;">🌱</div>
-                    <h2 style="font-size: 2.1rem; font-weight: 700; color: #1F2937; margin-bottom: 0.4rem;">
-                        Welcome aboard, {user_name}! ✨
-                    </h2>
-                    <p style="color: #6B7280; font-size: 1rem; margin: 0;">
-                        Your account has been verified and your profile is activated.
-                    </p>
+                    <h2 style="font-size: 2.1rem; font-weight: 700; color: #1F2937; margin-bottom: 0.4rem;">Welcome aboard, {user_name}! ✨</h2>
+                    <p style="color: #6B7280; font-size: 1rem; margin: 0;">Your account has been verified and your profile is activated.</p>
                 </div>
 
                 <div style="background: linear-gradient(135deg, #F0FDFA 0%, #EDE9FE 100%); border: 1.5px solid #CCFBF1; border-radius: 18px; padding: 1.8rem; text-align: center; margin-bottom: 1.8rem; box-shadow: 0 4px 15px rgba(20, 184, 166, 0.06);">
-                    <div style="display: inline-block; background: #0D9488; color: #FFFFFF; font-size: 0.76rem; font-weight: 700; padding: 0.25rem 0.75rem; border-radius: 12px; margin-bottom: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;">
-                        COMING NEXT
-                    </div>
-                    <h3 style="color: #134E4A; font-size: 1.3rem; font-weight: 700; margin-bottom: 0.6rem;">
-                        Interactive Student Onboarding
-                    </h3>
-                    <p style="color: #374151; font-size: 0.94rem; line-height: 1.6; margin: 0;">
-                        We are designing a guided onboarding flow to personalize your semester targets, 
-                        map university course syllabi, and calibrate career milestones.
-                    </p>
+                    <div style="display: inline-block; background: #0D9488; color: #FFFFFF; font-size: 0.76rem; font-weight: 700; padding: 0.25rem 0.75rem; border-radius: 12px; margin-bottom: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;">COMING NEXT</div>
+                    <h3 style="color: #134E4A; font-size: 1.3rem; font-weight: 700; margin-bottom: 0.6rem;">Interactive Student Onboarding</h3>
+                    <p style="color: #374151; font-size: 0.94rem; line-height: 1.6; margin: 0;">We are designing a guided onboarding flow to personalize your semester targets, map university course syllabi, and calibrate career milestones.</p>
                 </div>
 
                 <div style="display: flex; justify-content: center; gap: 0.8rem; flex-wrap: wrap; margin-bottom: 1.8rem;">
-                    <span style="background: #FFF1EE; color: #C2410C; padding: 0.45rem 1rem; border-radius: 20px; font-weight: 600; font-size: 0.88rem; border: 1px solid #FED7AA;">
-                        👤 {user_name}
-                    </span>
-                    <span style="background: #F3E8FF; color: #7E22CE; padding: 0.45rem 1rem; border-radius: 20px; font-weight: 600; font-size: 0.88rem; border: 1px solid #DDD6FE;">
-                        📍 {user_contact}
-                    </span>
-                    <span style="background: #ECFDF5; color: #047857; padding: 0.45rem 1rem; border-radius: 20px; font-weight: 600; font-size: 0.88rem; border: 1px solid #A7F3D0;">
-                        ✓ Account Active
-                    </span>
+                    <span style="background: #FFF1EE; color: #C2410C; padding: 0.45rem 1rem; border-radius: 20px; font-weight: 600; font-size: 0.88rem; border: 1px solid #FED7AA;">👤 {user_name}</span>
+                    <span style="background: #F3E8FF; color: #7E22CE; padding: 0.45rem 1rem; border-radius: 20px; font-weight: 600; font-size: 0.88rem; border: 1px solid #DDD6FE;">📍 {user_contact}</span>
+                    <span style="background: #ECFDF5; color: #047857; padding: 0.45rem 1rem; border-radius: 20px; font-weight: 600; font-size: 0.88rem; border: 1px solid #A7F3D0;">✓ Account Active</span>
                 </div>
-                """,
-                unsafe_allow_html=True,
+                """
             )
 
             # Continue button to Analyzer
@@ -472,7 +447,7 @@ def render_onboarding():
 
             st.write("")
             with st.container():
-                st.markdown('<span class="auth-link-marker"></span>', unsafe_allow_html=True)
+                inject('<span class="auth-link-marker"></span>')
                 if st.button("Return to Login", key="onboard_back_login", use_container_width=True):
                     st.session_state["screen"] = "login"
                     st.rerun()

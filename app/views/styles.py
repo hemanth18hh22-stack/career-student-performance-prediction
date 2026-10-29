@@ -1,8 +1,24 @@
 import streamlit as st
 
+
+def inject(html: str):
+    """Strips all leading/trailing whitespace and blank lines before injecting raw HTML/CSS into Streamlit."""
+    cleaned = "".join(line.strip() for line in html.splitlines())
+    st.markdown(cleaned, unsafe_allow_html=True)
+
+
 def inject_base_styles():
     """Injects core sunrise palette typography and auth container styles."""
-    st.markdown(
+    inject(
+        """
+        <div class="auth-bg-blobs" aria-hidden="true">
+            <div class="auth-blob blob-peach"></div>
+            <div class="auth-blob blob-pink"></div>
+            <div class="auth-blob blob-purple"></div>
+        </div>
+        """
+    )
+    inject(
         """
         <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
@@ -19,8 +35,83 @@ def inject_base_styles():
             --sunrise-bg-soft: #FFF9F7;
         }
 
+        /* ================= PAGE BACKGROUND & PASTEL BLOBS ================= */
+        .stApp {
+            background: linear-gradient(135deg, #FFF1E6 0%, #FDF2F8 50%, #F3E8FF 100%) !important;
+            background-attachment: fixed !important;
+        }
+
+        [data-testid="stAppViewContainer"] > .main {
+            position: relative;
+            z-index: 1;
+        }
+
+        .auth-bg-blobs {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .auth-blob {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(85px);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .blob-peach {
+            width: 480px;
+            height: 480px;
+            background: radial-gradient(circle, rgba(255, 122, 69, 0.28) 0%, rgba(255, 241, 230, 0) 70%);
+            top: -80px;
+            left: -80px;
+        }
+
+        .blob-pink {
+            width: 520px;
+            height: 520px;
+            background: radial-gradient(circle, rgba(236, 72, 153, 0.22) 0%, rgba(244, 114, 182, 0) 70%);
+            bottom: -100px;
+            left: 30%;
+        }
+
+        .blob-purple {
+            width: 460px;
+            height: 460px;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.22) 0%, rgba(221, 214, 254, 0) 70%);
+            top: 60px;
+            right: -80px;
+        }
+
         html, body, [class*="css"], .stMarkdown, .stText {
             font-family: 'Poppins', sans-serif !important;
+        }
+
+        /* ================= FLOATING SUNRISE LOGO ================= */
+        @keyframes heroLogoFloat {
+            0% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-8px);
+            }
+            100% {
+                transform: translateY(0);
+            }
+        }
+
+        .auth-hero-floating-logo {
+            font-size: 2.4rem;
+            margin-bottom: 0.6rem;
+            display: inline-block;
+            animation: heroLogoFloat 3.5s ease-in-out infinite;
+            will-change: transform;
         }
 
         /* ================= HIDE STREAMLIT HEADING ANCHORS ================= */
@@ -143,34 +234,60 @@ def inject_base_styles():
         }
 
         /* ================= AUTH CARD CONTAINER (:has) ================= */
+        @keyframes authFadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
         div[data-testid="stVerticalBlockBorderWrapper"]:has(.auth-card-marker) {
-            border: 1.5px solid #FCE7F3 !important;
-            background: #FFFFFF !important;
-            border-radius: 22px !important;
-            padding: 2.2rem 2.2rem 1.8rem 2.2rem !important;
-            box-shadow: 0 12px 35px rgba(244, 114, 182, 0.12) !important;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+            border: 2px solid transparent !important;
+            background-image: 
+                linear-gradient(#FFFFFF, #FFFFFF), 
+                linear-gradient(135deg, #FF7A45 0%, #EC4899 50%, #8B5CF6 100%) !important;
+            background-origin: padding-box, border-box !important;
+            background-clip: padding-box, border-box !important;
+            border-radius: 24px !important;
+            padding: 2.6rem 2.4rem 2.2rem 2.4rem !important;
+            box-shadow: 0 20px 60px rgba(236, 72, 153, 0.18) !important;
+            animation: authFadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+            transition: box-shadow 0.3s ease !important;
         }
         div[data-testid="stVerticalBlockBorderWrapper"]:has(.auth-card-marker):hover {
-            box-shadow: 0 16px 42px rgba(244, 114, 182, 0.18) !important;
+            box-shadow: 0 24px 70px rgba(236, 72, 153, 0.24) !important;
         }
 
         /* OTP Specific Centered Card */
         div[data-testid="stVerticalBlockBorderWrapper"]:has(.otp-card-marker) {
-            border: 1.5px solid #DDD6FE !important;
-            background: #FFFFFF !important;
-            border-radius: 22px !important;
+            border: 2px solid transparent !important;
+            background-image: 
+                linear-gradient(#FFFFFF, #FFFFFF), 
+                linear-gradient(135deg, #FF7A45 0%, #EC4899 50%, #8B5CF6 100%) !important;
+            background-origin: padding-box, border-box !important;
+            background-clip: padding-box, border-box !important;
+            border-radius: 24px !important;
             padding: 2.5rem 2.2rem 2rem 2.2rem !important;
-            box-shadow: 0 14px 40px rgba(139, 92, 246, 0.12) !important;
+            box-shadow: 0 20px 60px rgba(139, 92, 246, 0.18) !important;
+            animation: authFadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
         }
 
         /* Onboarding Specific Centered Card */
         div[data-testid="stVerticalBlockBorderWrapper"]:has(.onboarding-card-marker) {
-            border: 1.5px solid #CCFBF1 !important;
-            background: #FFFFFF !important;
-            border-radius: 22px !important;
+            border: 2px solid transparent !important;
+            background-image: 
+                linear-gradient(#FFFFFF, #FFFFFF), 
+                linear-gradient(135deg, #FF7A45 0%, #EC4899 50%, #8B5CF6 100%) !important;
+            background-origin: padding-box, border-box !important;
+            background-clip: padding-box, border-box !important;
+            border-radius: 24px !important;
             padding: 2.5rem 2.2rem 2rem 2.2rem !important;
-            box-shadow: 0 14px 40px rgba(20, 184, 166, 0.12) !important;
+            box-shadow: 0 20px 60px rgba(20, 184, 166, 0.18) !important;
+            animation: authFadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
         }
 
         /* Card Inner Header */
@@ -194,12 +311,12 @@ def inject_base_styles():
         div.st-key-signup_google_btn button {
             background-color: #FFFFFF !important;
             color: #374151 !important;
-            border: 1.5px solid #E5E7EB !important;
+            border: 1.5px solid #E9D5FF !important;
             border-radius: 12px !important;
             font-weight: 600 !important;
             font-size: 0.95rem !important;
-            padding: 0.65rem 1rem !important;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.04) !important;
+            padding: 0.68rem 1rem !important;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03) !important;
             transition: all 0.2s ease !important;
             width: 100% !important;
             text-decoration: none !important;
@@ -216,9 +333,9 @@ def inject_base_styles():
         }
         div.st-key-login_google_btn button:hover,
         div.st-key-signup_google_btn button:hover {
-            background-color: #F9FAFB !important;
-            border-color: #D1D5DB !important;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
+            background-color: #FFF7F5 !important;
+            border-color: #EC4899 !important;
+            box-shadow: 0 4px 14px rgba(236, 72, 153, 0.12) !important;
             color: #111827 !important;
             transform: translateY(-1px) !important;
         }
@@ -240,44 +357,151 @@ def inject_base_styles():
             display: flex;
             align-items: center;
             text-align: center;
-            margin: 1.15rem 0 1.25rem 0;
+            margin: 1.25rem 0 1.35rem 0;
             color: #9CA3AF;
-            font-size: 0.88rem;
+            font-size: 0.85rem;
             font-weight: 500;
         }
-        .auth-divider::before, .auth-divider::after {
+        .auth-divider::before {
             content: '';
             flex: 1;
-            border-bottom: 1.5px solid #F3F4F6;
+            height: 1.5px;
+            background: linear-gradient(90deg, rgba(236, 72, 153, 0) 0%, rgba(236, 72, 153, 0.35) 100%);
+            border: none;
+        }
+        .auth-divider::after {
+            content: '';
+            flex: 1;
+            height: 1.5px;
+            background: linear-gradient(90deg, rgba(236, 72, 153, 0.35) 0%, rgba(236, 72, 153, 0) 100%);
+            border: none;
         }
         .auth-divider span {
-            padding: 0 0.8rem;
+            padding: 0 0.85rem;
             color: #9CA3AF;
-            text-transform: uppercase;
-            font-size: 0.78rem;
-            letter-spacing: 0.05em;
+            text-transform: lowercase;
+            font-size: 0.82rem;
+            letter-spacing: 0.04em;
+            font-weight: 500;
         }
 
         /* ================= STREAMLIT TABS STYLING ================= */
+        div[data-baseweb="tab-list"] {
+            gap: 0.65rem !important;
+            border-bottom: none !important;
+            background: transparent !important;
+            padding: 0.25rem 0 !important;
+            margin-bottom: 1rem !important;
+        }
+        div[data-baseweb="tab-highlight"],
+        div[data-baseweb="tab-border"] {
+            display: none !important;
+        }
         button[data-baseweb="tab"] {
             font-family: 'Poppins', sans-serif !important;
             font-weight: 600 !important;
-            color: #6B7280 !important;
-            font-size: 0.95rem !important;
-            padding: 0.6rem 1.2rem !important;
+            font-size: 0.92rem !important;
+            padding: 0.55rem 1.4rem !important;
+            border-radius: 999px !important;
+            background-color: #F3E8FF !important;
+            color: #374151 !important;
+            border: none !important;
+            box-shadow: none !important;
+            transition: all 0.2s ease !important;
+        }
+        button[data-baseweb="tab"] p,
+        button[data-baseweb="tab"] div,
+        button[data-baseweb="tab"] span {
+            color: #374151 !important;
+            font-weight: 600 !important;
+        }
+        button[data-baseweb="tab"]:not([aria-selected="true"]):hover {
+            background-color: #EDE9FE !important;
+            color: #1F2937 !important;
+        }
+        button[data-baseweb="tab"]:not([aria-selected="true"]):hover p {
+            color: #1F2937 !important;
         }
         button[data-baseweb="tab"][aria-selected="true"] {
-            color: #FF7043 !important;
-            border-bottom-color: #FF7043 !important;
+            background: linear-gradient(135deg, #FF7A45 0%, #EC4899 50%, #8B5CF6 100%) !important;
+            color: #FFFFFF !important;
+            box-shadow: 0 4px 14px rgba(236, 72, 153, 0.3) !important;
+            border: none !important;
         }
-        div[data-baseweb="tab-highlight"] {
-            background-color: #FF7043 !important;
+        button[data-baseweb="tab"][aria-selected="true"] p,
+        button[data-baseweb="tab"][aria-selected="true"] div,
+        button[data-baseweb="tab"][aria-selected="true"] span {
+            color: #FFFFFF !important;
+            font-weight: 600 !important;
         }
 
         /* ================= PRIMARY BUTTONS (SUNRISE GRADIENT) ================= */
         button[kind="primary"],
         button[data-testid="stBaseButton-primary"],
         div.st-key-login_email_submit button,
+        div.st-key-login_phone_submit button,
+        div.st-key-signup_email_submit button,
+        div.st-key-signup_phone_submit button,
+        div.st-key-otp_verify_btn button,
+        div.st-key-onboard_continue_btn button {
+            background: linear-gradient(135deg, #FF7043 0%, #EC4899 50%, #8B5CF6 100%) !important;
+            color: #FFFFFF !important;
+            border: none !important;
+            border-radius: 12px !important;
+            padding: 0.75rem 1.6rem !important;
+            font-weight: 600 !important;
+            font-size: 1rem !important;
+            box-shadow: 0 4px 15px rgba(236, 72, 153, 0.3) !important;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+            width: 100% !important;
+            margin-top: 0.8rem !important;
+            text-decoration: none !important;
+        }
+        button[kind="primary"] p,
+        button[data-testid="stBaseButton-primary"] p,
+        div.st-key-login_email_submit button p,
+        div.st-key-login_phone_submit button p,
+        div.st-key-signup_email_submit button p,
+        div.st-key-signup_phone_submit button p,
+        div.st-key-otp_verify_btn button p,
+        div.st-key-onboard_continue_btn button p {
+            color: #FFFFFF !important;
+            font-weight: 600 !important;
+            text-decoration: none !important;
+            margin: 0 !important;
+        }
+        button[kind="primary"]::before,
+        button[data-testid="stBaseButton-primary"]::before,
+        div.st-key-login_email_submit button::before,
+        div.st-key-login_phone_submit button::before,
+        div.st-key-signup_email_submit button::before,
+        div.st-key-signup_phone_submit button::before,
+        div.st-key-otp_verify_btn button::before,
+        div.st-key-onboard_continue_btn button::before {
+            display: none !important;
+        }
+        button[kind="primary"]:hover,
+        button[data-testid="stBaseButton-primary"]:hover,
+        div.st-key-login_email_submit button:hover,
+        div.st-key-login_phone_submit button:hover,
+        div.st-key-signup_email_submit button:hover,
+        div.st-key-signup_phone_submit button:hover,
+        div.st-key-otp_verify_btn button:hover,
+        div.st-key-onboard_continue_btn button:hover {
+            transform: translateY(-2px) !important;
+            box-shadow: 0 10px 28px rgba(236, 72, 153, 0.48) !important;
+            color: #FFFFFF !important;
+        }
+        button[kind="primary"]:hover p,
+        button[data-testid="stBaseButton-primary"]:hover p,
+        div.st-key-login_email_submit button:hover p,
+        div.st-key-login_phone_submit button:hover p,
+        div.st-key-signup_email_submit button:hover p,
+        div.st-key-signup_phone_submit button:hover p,
+        div.st-key-otp_verify_btn button:hover p,
+        div.st-key-onboard_continue_btn button:hover p {
+            color: #FFFFFF !important;
+        }
         div.st-key-login_phone_submit button,
         div.st-key-signup_email_submit button,
         div.st-key-signup_phone_submit button,
@@ -457,23 +681,40 @@ def inject_base_styles():
             margin-top: 0.35rem;
         }
 
-        /* Generic Inputs */
-        div[data-baseweb="input"] {
+        /* ================= INPUTS STYLING ================= */
+        div[data-baseweb="input"],
+        div[data-baseweb="base-input"] {
+            background-color: #FFFFFF !important;
+            border: 1.5px solid #E9D5FF !important;
             border-radius: 12px !important;
+            box-shadow: none !important;
+            transition: all 0.2s ease !important;
         }
-        div[data-baseweb="input"]:focus-within {
-            border-color: #FF7043 !important;
-            box-shadow: 0 0 0 3px rgba(255, 112, 67, 0.18) !important;
+        div[data-baseweb="input"] input,
+        div[data-baseweb="base-input"] input {
+            background-color: #FFFFFF !important;
+            border-radius: 10px !important;
+            color: #1F2937 !important;
+            font-family: 'Poppins', sans-serif !important;
+            font-size: 0.95rem !important;
+        }
+        div[data-baseweb="input"]:focus-within,
+        div[data-baseweb="base-input"]:focus-within {
+            border-color: #8B5CF6 !important;
+            box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.15) !important;
+        }
+        div[data-baseweb="input"]:has(input:disabled) {
+            background-color: #FAF5FF !important;
+            border-color: #E9D5FF !important;
         }
         </style>
-        """,
-        unsafe_allow_html=True,
+        """
     )
 
 
 def inject_analyzer_styles():
     """Injects styles for the prediction analyzer (preserved completely from original app)."""
-    st.markdown(
+    inject(
         """
         <style>
         /* Header Banner */
@@ -708,6 +949,5 @@ def inject_analyzer_styles():
             font-weight: 700 !important;
         }
         </style>
-        """,
-        unsafe_allow_html=True,
+        """
     )
