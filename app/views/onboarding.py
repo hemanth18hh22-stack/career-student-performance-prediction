@@ -7,6 +7,20 @@ skill proficiency ratings, and career goal calibration.
 import time
 from typing import Any, Dict, List
 import streamlit as st
+import streamlit.components.v1 as components
+
+# Ensure components.html accepts key parameter without throwing TypeError
+_orig_components_html = components.html
+
+
+def _safe_components_html(html_code: str, *args, key=None, **kwargs):
+    """Wrapper around components.html allowing safe usage of the key parameter."""
+    return _orig_components_html(html_code, *args, **kwargs)
+
+
+components.html = _safe_components_html
+if hasattr(st, "components") and hasattr(st.components, "v1"):
+    st.components.v1.html = _safe_components_html
 
 from app.catalog import (
     EDUCATION_LEVELS,
@@ -44,6 +58,49 @@ def render_onboarding():
         st.session_state["onboarding_profile"] = {}
 
     current_step = st.session_state["onb_step"]
+
+    # Scroll the parent page's main container to the top when the step changes
+    st.components.v1.html(
+        f"""
+        <!-- key: onb_scroll_step_{current_step} -->
+        <script>
+            (function() {{
+                function scrollToTop() {{
+                    try {{
+                        const parentDoc = window.parent.document;
+                        const candidates = [
+                            parentDoc.querySelector('[data-testid="stMain"]'),
+                            parentDoc.querySelector('.stMain'),
+                            parentDoc.querySelector('[data-testid="stAppViewContainer"]'),
+                            parentDoc.querySelector('.main'),
+                            parentDoc.documentElement,
+                            parentDoc.body
+                        ];
+                        for (const el of candidates) {{
+                            if (el) {{
+                                el.scrollTop = 0;
+                                if (typeof el.scrollTo === 'function') {{
+                                    el.scrollTo({{ top: 0, behavior: 'instant' }});
+                                }}
+                            }}
+                        }}
+                        if (window.parent && typeof window.parent.scrollTo === 'function') {{
+                            window.parent.scrollTo({{ top: 0, behavior: 'instant' }});
+                        }}
+                    }} catch (e) {{
+                        console.warn("Scroll to top failed:", e);
+                    }}
+                }}
+                scrollToTop();
+                setTimeout(scrollToTop, 50);
+                setTimeout(scrollToTop, 150);
+            }})();
+        </script>
+        """,
+        height=0,
+        width=0,
+        key=f"onb_scroll_step_{current_step}",
+    )
 
     # Centered single-column layout matching the auth container style
     col_l, col_center, col_r = st.columns([1, 1.85, 1])
@@ -311,14 +368,25 @@ def _render_step_1():
     col_back, col_next = st.columns([1, 1.2])
 
     with col_back:
-        if st.button("⬅️ Return to Login", key="onb_back_btn", use_container_width=True):
-            if hasattr(st, "user") and st.user.get("is_logged_in", False):
+        is_logged_in = False
+        try:
+            is_logged_in = bool(st.user.is_logged_in)
+        except Exception:
+            is_logged_in = False
+
+        if is_logged_in:
+            if st.button("Sign out", key="onb_signout_btn", use_container_width=True):
                 try:
                     st.logout()
                 except Exception:
                     pass
-            st.session_state["screen"] = "login"
-            st.rerun()
+                st.session_state.clear()
+                st.session_state["screen"] = "login"
+                st.rerun()
+        else:
+            if st.button("⬅️ Return to Login", key="onb_back_btn", use_container_width=True):
+                st.session_state["screen"] = "login"
+                st.rerun()
 
     with col_next:
         if st.button("Next: Skills ➡️", key="onb_next_btn", type="primary", use_container_width=True):

@@ -1,5 +1,6 @@
 import os
 import sys
+import time
 from pathlib import Path
 import streamlit as st
 
@@ -8,7 +9,7 @@ root_dir = Path(__file__).resolve().parent.parent
 if str(root_dir) not in sys.path:
     sys.path.insert(0, str(root_dir))
 
-from app.views.styles import inject_base_styles
+from app.views.styles import inject, inject_base_styles
 from app.views.auth import (
     render_login,
     render_signup,
@@ -53,10 +54,21 @@ if is_google_authenticated:
     # Auto-route authenticated Google users away from auth cards
     current_scr = st.session_state.get("screen")
     if current_scr in [None, "login", "signup", "otp"]:
-        if st.session_state.get("profile"):
-            st.session_state["screen"] = "analyzer"
-        else:
-            st.session_state["screen"] = "onboarding"
+        target_screen = "analyzer" if st.session_state.get("profile") else "onboarding"
+        st.session_state["screen"] = target_screen
+
+        # Short centered message while deciding which screen to show
+        inject(
+            """
+            <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 55vh; text-align: center;">
+                <div style="font-size: 2.5rem; margin-bottom: 0.75rem; animation: heroLogoFloat 2s ease-in-out infinite;">🌅</div>
+                <h3 style="font-size: 1.4rem; font-weight: 600; color: #1F2937; margin: 0 0 0.4rem 0;">Signing you in...</h3>
+                <p style="font-size: 0.92rem; color: #6B7280; margin: 0;">Calibrating your student workspace</p>
+            </div>
+            """
+        )
+        time.sleep(0.3)
+        st.rerun()
 
 # 4. Initialize Session State Defaults
 query_screen = st.query_params.get("screen")

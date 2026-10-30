@@ -182,6 +182,13 @@ def render_login():
             """
         )
 
+    # Pre-warm model in cache at the very end of login render so it's ready when user reaches analyzer
+    try:
+        from app.views.analyzer import load_model
+        load_model()
+    except Exception:
+        pass
+
 
 def render_signup():
     """Renders the warm, welcoming two-column Sunrise signup screen."""

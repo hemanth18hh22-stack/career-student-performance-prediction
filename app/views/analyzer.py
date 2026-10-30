@@ -7,9 +7,13 @@ import streamlit as st
 from app.views.styles import inject, inject_analyzer_styles
 
 
+_IS_MODEL_LOADED = False
+
+
 @st.cache_resource
 def load_model(model_path="models/performance_model.pkl"):
     """Loads the trained machine learning model from disc."""
+    global _IS_MODEL_LOADED
     if not os.path.exists(model_path):
         # 3 directories up (root from app/views/analyzer.py)
         root_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -21,7 +25,14 @@ def load_model(model_path="models/performance_model.pkl"):
             alt_path2 = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "models", "performance_model.pkl")
             if os.path.exists(alt_path2):
                 model_path = alt_path2
-    return joblib.load(model_path)
+    m = joblib.load(model_path)
+    _IS_MODEL_LOADED = True
+    return m
+
+
+def is_model_loaded() -> bool:
+    """Returns True if the performance model has already been loaded into memory."""
+    return _IS_MODEL_LOADED
 
 
 def render_analyzer():
@@ -136,7 +147,11 @@ def render_analyzer():
     )
 
     try:
-        model = load_model()
+        if not is_model_loaded():
+            with st.spinner("Preparing your dashboard..."):
+                model = load_model()
+        else:
+            model = load_model()
     except Exception as e:
         st.error(f"Error loading model: {e}")
         st.stop()
