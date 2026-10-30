@@ -18,9 +18,7 @@ def inject_base_styles():
         </div>
         """
     )
-    inject(
-        """
-        <style>
+    inject("""<style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
         :root {
@@ -859,16 +857,273 @@ def inject_base_styles():
             color: #831843 !important;
             font-weight: 600 !important;
         }
-        </style>
-        """
-    )
+        </style>""")
+    inject("""<style>
+        /* ================= RESPONSIVE DESIGN SYSTEM ================= */
+        /* GLOBAL RESET & OVERFLOW PROTECTION */
+        html, body, .stApp, [data-testid="stAppViewContainer"], .main {
+            overflow-x: hidden !important;
+            max-width: 100vw !important;
+            box-sizing: border-box !important;
+        }
+        *, *::before, *::after {
+            box-sizing: border-box !important;
+        }
+        img, svg, .icon-badge, .auth-hero-floating-logo, .auth-feature-icon {
+            max-width: 100% !important;
+            height: auto !important;
+            box-sizing: border-box !important;
+        }
+        /* HEADINGS CLAMP SCALING */
+        .auth-hero-title {
+            font-size: clamp(1.7rem, 4.5vw, 3rem) !important;
+            line-height: 1.25 !important;
+        }
+        .auth-hero-desc {
+            font-size: clamp(0.88rem, 1.8vw, 1.05rem) !important;
+            line-height: 1.5 !important;
+        }
+        .auth-card-header h2 {
+            font-size: clamp(1.35rem, 3.2vw, 1.95rem) !important;
+        }
+        .auth-card-header p {
+            font-size: clamp(0.84rem, 1.8vw, 0.95rem) !important;
+        }
+        .header-banner h1 {
+            font-size: clamp(1.6rem, 4vw, 2.5rem) !important;
+        }
+        .header-banner p {
+            font-size: clamp(0.92rem, 2vw, 1.15rem) !important;
+        }
+        .card-title {
+            font-size: clamp(1.15rem, 2.5vw, 1.35rem) !important;
+        }
+        /* ================= TABLET & MOBILE (<= 900px) ================= */
+        @media (max-width: 900px) {
+            div[data-testid="stHorizontalBlock"] {
+                flex-direction: column !important;
+                flex-wrap: wrap !important;
+                gap: 1.25rem !important;
+            }
+            div[data-testid="stHorizontalBlock"] > div[data-testid="stColumn"],
+            div[data-testid="stColumn"] {
+                width: 100% !important;
+                min-width: 100% !important;
+                max-width: 100% !important;
+                flex: 1 1 100% !important;
+            }
+            div[data-testid="stHorizontalBlock"]:has(.otp-card-marker) > div[data-testid="stColumn"]:not(:has(.otp-card-marker)),
+            div[data-testid="stHorizontalBlock"]:has(.onboarding-card-marker) > div[data-testid="stColumn"]:not(:has(.onboarding-card-marker)),
+            div[data-testid="stColumn"]:has(> div[data-testid="stVerticalBlock"]:empty) {
+                display: none !important;
+            }
+            .auth-hero-panel {
+                width: 100% !important;
+                max-width: 100% !important;
+                height: auto !important;
+                min-height: auto !important;
+            }
+            div[data-testid="stTabs"] {
+                width: 100% !important;
+            }
+            div[data-testid="stTabs"] div[role="tablist"] {
+                width: 100% !important;
+                display: flex !important;
+                gap: 0.5rem !important;
+                border-bottom: none !important;
+            }
+            div[data-testid="stTabs"] div[role="tab"],
+            div[data-testid="stTab"],
+            button[data-baseweb="tab"] {
+                flex: 1 1 50% !important;
+                width: 50% !important;
+                text-align: center !important;
+                justify-content: center !important;
+            }
+            button[kind="primary"],
+            button[data-testid="stBaseButton-primary"],
+            button[data-testid="stBaseButton-secondary"],
+            div.stButton > button,
+            div[data-testid="stFormSubmitButton"] > button {
+                width: 100% !important;
+            }
+        }
+        /* ================= TABLET (481px to 900px) ================= */
+        @media (min-width: 481px) and (max-width: 900px) {
+            div[data-testid="stMainBlockContainer"],
+            .block-container {
+                padding: 1.5rem !important;
+                max-width: 100% !important;
+            }
+            .auth-hero-panel {
+                padding: 2rem 1.8rem !important;
+                margin-bottom: 1.25rem !important;
+                border-radius: 22px !important;
+            }
+            div[data-testid="stVerticalBlockBorderWrapper"]:has(.auth-card-marker),
+            div[data-testid="stVerticalBlock"]:has(> div[data-testid="stElementContainer"] .auth-card-marker),
+            div[data-testid="stVerticalBlockBorderWrapper"]:has(.onboarding-card-marker),
+            div[data-testid="stVerticalBlock"]:has(> div[data-testid="stElementContainer"] .onboarding-card-marker) {
+                width: 100% !important;
+                max-width: 100% !important;
+                padding: 1.8rem !important;
+                border-radius: 22px !important;
+            }
+            .blob-peach {
+                width: 300px !important;
+                height: 300px !important;
+                filter: blur(60px) !important;
+            }
+            .blob-pink {
+                width: 320px !important;
+                height: 320px !important;
+                filter: blur(60px) !important;
+            }
+            .blob-purple {
+                width: 280px !important;
+                height: 280px !important;
+                filter: blur(60px) !important;
+            }
+        }
+        /* ================= MOBILE (<= 480px) ================= */
+        @media (max-width: 480px) {
+            div[data-testid="stMainBlockContainer"],
+            .block-container {
+                padding: 1rem !important;
+                max-width: 100% !important;
+            }
+            .blob-peach {
+                width: 180px !important;
+                height: 180px !important;
+                filter: blur(40px) !important;
+                top: -30px !important;
+                left: -30px !important;
+            }
+            .blob-pink {
+                width: 200px !important;
+                height: 200px !important;
+                filter: blur(40px) !important;
+                bottom: -40px !important;
+                left: 5% !important;
+            }
+            .blob-purple {
+                width: 170px !important;
+                height: 170px !important;
+                filter: blur(40px) !important;
+                top: 30px !important;
+                right: -30px !important;
+            }
+            .auth-hero-panel {
+                padding: 1.35rem 1.15rem !important;
+                margin-bottom: 0.75rem !important;
+                border-radius: 20px !important;
+            }
+            .auth-feature-cards {
+                display: none !important;
+            }
+            .auth-hero-floating-logo {
+                font-size: 2.2rem !important;
+                margin-bottom: 0.35rem !important;
+            }
+            .auth-hero-title {
+                margin-bottom: 0.35rem !important;
+            }
+            .auth-hero-desc {
+                margin-bottom: 0.35rem !important;
+            }
+            .auth-hero-panel > div:last-child {
+                margin-top: 0.6rem !important;
+                font-size: 0.78rem !important;
+            }
+            div[data-testid="stVerticalBlockBorderWrapper"]:has(.auth-card-marker),
+            div[data-testid="stVerticalBlock"]:has(> div[data-testid="stElementContainer"] .auth-card-marker),
+            div[data-testid="stVerticalBlockBorderWrapper"]:has(.onboarding-card-marker),
+            div[data-testid="stVerticalBlock"]:has(> div[data-testid="stElementContainer"] .onboarding-card-marker) {
+                width: 100% !important;
+                max-width: 100% !important;
+                padding: 1.2rem !important;
+                border-radius: 20px !important;
+            }
+            div[data-baseweb="input"],
+            div[data-baseweb="base-input"],
+            div[data-baseweb="select"] > div,
+            button,
+            button[kind="primary"],
+            button[data-testid="stBaseButton-primary"],
+            button[data-testid="stBaseButton-secondary"],
+            div.stButton > button {
+                min-height: 44px !important;
+            }
+            input,
+            select,
+            textarea,
+            div[data-baseweb="input"] input,
+            div[data-baseweb="base-input"] input,
+            input[type="text"],
+            input[type="password"],
+            input[type="number"] {
+                font-size: 16px !important;
+                min-height: 44px !important;
+            }
+            div[data-testid="stVerticalBlock"]:has(.otp-input-marker) input {
+                font-size: 1.45rem !important;
+                letter-spacing: 0.35rem !important;
+                height: 52px !important;
+                min-height: 52px !important;
+                padding: 0 0.5rem !important;
+                text-align: center !important;
+            }
+            .demo-otp-box {
+                padding: 0.85rem !important;
+                margin: 1rem 0 1.2rem 0 !important;
+            }
+            .demo-otp-code {
+                font-size: 1.45rem !important;
+                letter-spacing: 0.15em !important;
+            }
+            .demo-otp-note {
+                font-size: 0.78rem !important;
+            }
+            div:has(> div[data-testid="stElementContainer"] .domain-cards-marker) div[role="radiogroup"],
+            div[data-testid="stVerticalBlock"]:has(.domain-cards-marker) div[role="radiogroup"] {
+                grid-template-columns: 1fr !important;
+            }
+        }
+        /* ================= EXTRA SMALL MOBILE (<= 360px) ================= */
+        @media (max-width: 360px) {
+            div[data-testid="stVerticalBlockBorderWrapper"]:has(.auth-card-marker),
+            div[data-testid="stVerticalBlock"]:has(> div[data-testid="stElementContainer"] .auth-card-marker) {
+                padding: 1rem !important;
+            }
+            div[data-testid="stVerticalBlock"]:has(.otp-input-marker) input {
+                font-size: 1.2rem !important;
+                letter-spacing: 0.2rem !important;
+                height: 48px !important;
+                min-height: 48px !important;
+                padding: 0 0.25rem !important;
+            }
+            .demo-otp-code {
+                font-size: 1.25rem !important;
+                letter-spacing: 0.1em !important;
+            }
+        }
+        /* ================= LARGE DESKTOP (>= 1601px) ================= */
+        @media (min-width: 1601px) {
+            div[data-testid="stMainBlockContainer"],
+            .block-container {
+                max-width: 1400px !important;
+                margin-left: auto !important;
+                margin-right: auto !important;
+                padding-left: 2rem !important;
+                padding-right: 2rem !important;
+            }
+        }
+</style>""")
 
 
 def inject_analyzer_styles():
     """Injects styles for the prediction analyzer (preserved completely from original app)."""
-    inject(
-        """
-        <style>
+    inject("""<style>
         /* Header Banner */
         .header-banner {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -1100,6 +1355,4 @@ def inject_analyzer_styles():
             color: #1F2937 !important;
             font-weight: 700 !important;
         }
-        </style>
-        """
-    )
+        </style>""")
